@@ -1,4 +1,5 @@
 import art
+import pickle
 import random
 
 class Dish:
@@ -7,23 +8,37 @@ class Dish:
     
     def __repr__(self) -> str:
         return self.name
+    
 
-all_dishes = [
-    Dish('Köttbullar med pasta'),
-    Dish('Plättar'),
-    Dish('Vegofärs med pasta'),
-]
+def save_list(list, file_path):
+    with open(file_path, 'wb') as file:
+        pickle.dump(list, file)
+
+def load_list(file_path):
+    with open(file_path, 'rb') as file:
+        return pickle.load(file)
+
+# all_dishes = [
+#     Dish('Köttbullar med pasta'),
+#     Dish('Plättar'),
+#     Dish('Vegofärs med pasta'),
+# ]
+
+# save_list(all_dishes, '.\\data\\all_dishes.pkl')
+
+all_dishes = []
 
 def main_menu():
     main_title = "What's for dinner?"
     prompt_menu = """1: Vad ska vi äta?
 2: Visa alla maträtter
-3: Lägg till maträtt [ToDo: Denna funkar inte heller...]
+3: Lägg till maträtt
 q: Avbryt
 """
 
     art.tprint(main_title)
     print(prompt_menu)
+    all_dishes = load_list('.\\data\\all_dishes.pkl')
 
     while True:
         user_input = input("""
@@ -42,10 +57,14 @@ q: Avbryt
             print("********************************************")
         elif user_input == '3':
             print()
+            new_dish_input = input("[Skriv in en ny maträtt, avsluta med <enter>]: ")
+            all_dishes.append(Dish(new_dish_input))
+            print()
             print("""********************************************""")
-            print("""Funkar tyvärr inte än :-(""")
+            print(f"{new_dish_input} har lagts till, bra idé!")
             print("********************************************")
         elif user_input == 'q':
+            save_list(all_dishes, '.\\data\\all_dishes.pkl')
             print()
             print("""********************************************""")
             print("""Tack för maten, den var go', mitt i maten stod en ko.""")
